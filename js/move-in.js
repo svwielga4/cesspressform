@@ -106,7 +106,12 @@ var formHandler = (function($){
             data: data, // package all the data up first
             success: function(res){
                 // some success actions
-                console.log('good')
+                if(!res.success){
+                    console.log('something bad happened');
+                    return;
+                }
+                // display success message
+                console.log('you made it');
             },
             error: function(){
                 // some error actions

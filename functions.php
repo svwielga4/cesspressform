@@ -357,14 +357,9 @@ function move_in_form_submission() {
 
     error_log( print_r( $_POST, true ) );
 
-    // do some sanitization first
 
     // do some validation on the back end
 
-    // add the extra data to the request before sending
-    // Submission URL: https://cptest.move-n.com/api/Lead/LeadInfo
-    // Sender_ID: 849b2101c11b171ca1cb65b27d1119127ee38f2c
-    // Parent_ID: 224
 
     // send request off to the 3rd party service
     $url = 'https://cptest.move-n.com/api/Lead/LeadInfo';
@@ -403,12 +398,12 @@ function move_in_form_submission() {
     $response = wp_remote_post( $url, $args );
 
     error_log( print_r( $response, true ) );
-
-    // check response
-
-    // if response is good return a
-    // wp_send_json_success();
+    if ( wp_remote_retrieve_response_code($response) !== 200 ){
+        // calling send_json_error or success has a die() in it
+        wp_send_json_error();
+        return;
+    }
 
     // if its bad
-    // wp_send_json_error();
+    wp_send_json_success();
 }
