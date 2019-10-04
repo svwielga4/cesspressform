@@ -22,6 +22,46 @@ var formHandler = (function($){
      */
     var checkInputs = function(){
         // do some validation on the input values
+        // check first name is length > 0
+        var first_name_error = firstName.val().length > 0
+                                ? false
+                                : true;
+        // check prospect first name
+        var prospect_first_name_error = prospectFirstName.val().length > 0
+                                        ? false
+                                        : true;
+        // checkl last name is length > 0
+        var last_name_error = lastName.val().length > 0
+                                ? false
+                                : true;
+        // check prospect last name
+        var prospect_last_name_error = prospectLastName.val().length > 0
+                                        ? false
+                                        : true;
+        // check if at least one hp cp email has value
+        // check if that one is valid
+
+        var isMissingHpCpEmail = email.val().length > 0
+                                && homePhone.val().length > 0
+                                && cellPhone.val().length > 0
+                                    ? false
+                                    : true;
+        if (isMissingHpCpEmail) {
+            return {
+                first_name: first_name_error,
+                last_name: last_name_error,
+                prospect_first_name: prospect_first_name_error,
+                prospect_last_name: prospect_last_name_error,
+                hp_cp_email: isMissingHpCpEmail
+            };
+        }
+
+
+    }
+
+    var validateEmail = function (email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
     }
 
     /**
@@ -80,11 +120,12 @@ var formHandler = (function($){
         // check for violations
         var hasErrors = checkInputs();
         // if some violations display Errors
-        if (hasErrors) {
-            // early return because there are errors
-            displayErrors();
-            return;
-        }
+        console.log(hasErrors);
+        // if (hasErrors) {
+        //     // early return because there are errors
+        //     displayErrors();
+        //     return;
+        // }
 
         // if everything is good, pack up the data and submit
         var data = packageData();
