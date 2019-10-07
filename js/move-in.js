@@ -10,6 +10,7 @@ var formHandler = (function($){
     var state = $('#state');
     var city = $('#city');
     var zip = $('#zip');
+    var hpCpEmail = $('#hp_cp_email');
     var note = $('#note');
     var prospectFirstName = $('#prospect_first_name');
     var prospectLastName = $('#prospect_last_name');
@@ -21,39 +22,75 @@ var formHandler = (function($){
      * @return errors object|false
      */
     var checkInputs = function(){
+        $('#first_name_error').empty();
+        $('#prospect_first_name_error').empty();
+        $('#last_name_error').empty();
+        $('#prospect_last_name_error').empty();
+        $('#hp_cp_email_error').empty();
+
         // do some validation on the input values
         // check first name is length > 0
         var first_name_error = firstName.val().length > 0
                                 ? false
                                 : true;
+
         // check prospect first name
         var prospect_first_name_error = prospectFirstName.val().length > 0
                                         ? false
                                         : true;
+
         // checkl last name is length > 0
         var last_name_error = lastName.val().length > 0
                                 ? false
                                 : true;
+
         // check prospect last name
         var prospect_last_name_error = prospectLastName.val().length > 0
                                         ? false
                                         : true;
+
         // check if at least one hp cp email has value
         // check if that one is valid
+        // var hp_cp_email_error = email.val().length < 0 && homePhone.val().length < 0 && cellPhone.val().length < 0
+        //                                                                                 ? false
+        //                                                                                 : true;
+        
+        var hp_cp_email_error = email.val().length <= 0 && homePhone.val().length <= 0 && cellPhone.val().length <= 0;
 
-        var isMissingHpCpEmail = email.val().length > 0
-                                && homePhone.val().length > 0
-                                && cellPhone.val().length > 0
-                                    ? false
-                                    : true;
-        if (isMissingHpCpEmail) {
-            return {
-                first_name: first_name_error,
-                last_name: last_name_error,
-                prospect_first_name: prospect_first_name_error,
-                prospect_last_name: prospect_last_name_error,
-                hp_cp_email: isMissingHpCpEmail
-            };
+        // if (hp_cp_email_error) {
+        //     return {
+        //         first_name: first_name_error,
+        //         last_name: last_name_error,
+        //         prospect_first_name: prospect_first_name_error,
+        //         prospect_last_name: prospect_last_name_error,
+        //         hp_cp_email: hp_cp_email_error
+        //     };
+        // }
+
+        var requiredFields = [first_name_error, prospect_first_name_error, last_name_error, prospect_last_name_error, hp_cp_email_error];
+
+        for (var i=0; i<requiredFields.length; i++) {
+            if (requiredFields[i]) {
+                switch (i) {
+                    case 0:
+                        displayErrors(firstName);
+                        break;
+                    case 1:
+                        displayErrors(prospectFirstName);
+                        break;
+                    case 2:
+                        displayErrors(lastName);
+                        break;
+                    case 3: 
+                        displayErrors(prospectLastName);
+                        break;
+                    case 4: 
+                        displayErrors(hpCpEmail);
+                        break;
+                    default:
+                        console.log('Sorry, something went wrong');
+                }
+            }
         }
 
 
@@ -67,10 +104,17 @@ var formHandler = (function($){
     /**
      * updates the DOM to notify a user about improper form data
      */
-    var displayErrors = function(){
+    var displayErrors = function(field_id){
         // when some data is not present
         // give some tips to the user on what to do
         // to put the form in a good state
+        // $('#error_message').append('<h2>There was a problem with your submission. Errors have been highlighted below.</h2>');
+        if (field_id.selector == '#hp_cp_email') {
+            $(field_id.selector + '_error').append('<span>One of the above fields must be filled out. </span>');
+        } else {
+            $(field_id.selector + '_error').append('<span>This field is required.</span>');
+        }
+        
     }
 
     /**

@@ -325,7 +325,7 @@ require get_template_directory() . '/inc/customizer.php';
 
 add_action( 'wp_enqueue_scripts', 'add_form_scripts' );
 function add_form_scripts() {
-    if ( is_page( 'move-form' ) ) {
+    if ( is_page( 'move' ) ) {
         wp_enqueue_script(
             'move-in-script', // internal identifier
             get_template_directory_uri() . '/js/move-in.js', // path to js file

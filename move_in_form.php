@@ -6,15 +6,23 @@
 
 get_header();
 ?>
+<style>
+.error {
+    color: red;
+}
+</style>
 
 <h1>Lead Information</h1>
+<div class="error" id="error_message"></div>
 
 <label for="first_name">*First Name: </label>
 <input type="text" id="first_name" size="50" maxlength="50">
+<span class="error" id="first_name_error"></span>
 <br/>
 
 <label for="last_name">*Last Name: </label>
 <input type="text" id="last_name" size="50" maxlength="50">
+<span class="error" id="last_name_error"></span>
 <br/>
 
 <h2>You must fill in at least one: Home Phone, Cell Phone or Email</h2>
@@ -30,6 +38,8 @@ get_header();
 <label for="email">Email: </label>
 <input type="text" id="email">
 <br/>
+<div id="hp_cp_email"></div>
+<span class="error" id="hp_cp_email_error"></span>
 
 <h2>Mailing Address</h2>
 
@@ -59,10 +69,12 @@ get_header();
 
 <label for="prospect_first_name">*Prospect First Name: </label>
 <input type="text" id="prospect_first_name">
+<span class="error" id="prospect_first_name_error"></span>
 <br/>
 
 <label for="prospect_last_name">*Prospect Last Name: </label>
 <input type="text" id="prospect_last_name">
+<span class="error" id="prospect_last_name_error"></span>
 <br/>
 
 <label for="typeofservice">Type of Service: </label>
