@@ -352,7 +352,7 @@ add_action( 'wp_ajax_move_in_form_submission', 'test' );
 add_action( 'wp_ajax_nopriv_move_in_form_submission', 'test' );
 function test(){
     error_log(
-        remove_non_alpha('234abv234sdfa 234sd#$@a2342sdf')
+        filter_phone_number('(234)abv-234sdfa 234sd#$@a2342sdf')
     );
 }
 function move_in_form_submission() {
@@ -369,25 +369,25 @@ function move_in_form_submission() {
     // send request off to the 3rd party service
     $url = 'https://cptest.move-n.com/api/Lead/LeadInfo';
     $body = [
-            'sender_id' => '849b2101c11b171ca1cb65b27d1119127ee38f2c',
-            'parent_id' => '224' ,
-            'first_name' => remove_non_alpha( sanitize_text_field( $_POST['firstName'] ) ),
-            'last_name' => remove_non_alpha( sanitize_text_field( $_POST['lastName'] ) ),
-            'prospect_first_name' => remove_non_alpha( sanitize_text_field( $_POST['prospectFirstName'] ) ),
-            'prospect_last_name' => remove_non_alpha( sanitize_text_field( $_POST['prospectLastName'] ) ),
-            'home_phone' => sanitize_text_field( $_POST['homePhone'] ),
-            'cell_phone' => sanitize_text_field( $_POST['cellPhone'] ),
-            'email' => sanitize_text_field( $_POST['email'] ),
-            'notes' => sanitize_text_field( $_POST['notes'] ),
-            'source_code' => '1',
-            'property_id' => '483',
-            'address1' => sanitize_text_field( $_POST['address1'] ),
-            'address2' => sanitize_text_field( $_POST['address2'] ),
-            'city' => sanitize_text_field( $_POST['city'] ),
-            'state' => sanitize_text_field( $_POST['state'] ),
-            'zip' => sanitize_text_field( $_POST['zip'] ),
-            'TypeOfService' => sanitize_text_field( $_POST['typeOfService'] ),
-        ];
+        'sender_id' => '849b2101c11b171ca1cb65b27d1119127ee38f2c',
+        'parent_id' => '224' ,
+        'first_name' => filter_non_alpha( sanitize_text_field( $_POST['firstName'] ) ),
+        'last_name' => filter_non_alpha( sanitize_text_field( $_POST['lastName'] ) ),
+        'prospect_first_name' => filter_non_alpha( sanitize_text_field( $_POST['prospectFirstName'] ) ),
+        'prospect_last_name' => filter_non_alpha( sanitize_text_field( $_POST['prospectLastName'] ) ),
+        'home_phone' => filter_phone_number( sanitize_text_field( $_POST['homePhone'] ) ),
+        'cell_phone' => filter_phone_number( sanitize_text_field( $_POST['cellPhone'] ) ),
+        'email' => sanitize_text_field( $_POST['email'] ),
+        'notes' => sanitize_text_field( $_POST['notes'] ),
+        'source_code' => '1',
+        'property_id' => '483',
+        'address1' => sanitize_text_field( $_POST['address1'] ),
+        'address2' => sanitize_text_field( $_POST['address2'] ),
+        'city' => sanitize_text_field( $_POST['city'] ),
+        'state' => sanitize_text_field( $_POST['state'] ),
+        'zip' => sanitize_text_field( $_POST['zip'] ),
+        'TypeOfService' => sanitize_text_field( $_POST['typeOfService'] ),
+    ];
 
     $errors = check_errors( $body );
 
@@ -433,7 +433,12 @@ function check_length( $param, $max_len ) {
 /**
  * removes all non alpha chars on certain params
  */
-function remove_non_alpha( $param ){
+function filter_non_alpha( $param ){
     $filtered = preg_replace('/[^a-zA-Z ]+/', '', $param);
+    return $filtered;
+}
+
+function filter_phone_number( $param ){
+    $filtered = preg_replace('/[^0-9\(\)\-\.]+/', '', $param);
     return $filtered;
 }
