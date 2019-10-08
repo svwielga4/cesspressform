@@ -101,10 +101,12 @@ var formHandler = (function($){
      * updates the DOM to notify a user about improper form data
      */
     var displayErrors = function(field_id){
+        $('#error_message').empty();
         // when some data is not present
         // give some tips to the user on what to do
         // to put the form in a good state
-        // $('#error_message').append('<h2>There was a problem with your submission. Errors have been highlighted below.</h2>');
+        $('#error_message').append('<h2>There was a problem with your submission. Errors have been highlighted below.</h2>');
+
         if (field_id.selector == '#hp_cp_email') {
             $(field_id.selector + '_error').append('<span>At least one point of contact is required. A home phone, cell phone, or email.</span>');
         } else {
