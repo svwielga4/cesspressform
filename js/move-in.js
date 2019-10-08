@@ -51,10 +51,6 @@ var formHandler = (function($){
 
         // check if at least one hp cp email has value
         // check if that one is valid
-        // var hp_cp_email_error = email.val().length < 0 && homePhone.val().length < 0 && cellPhone.val().length < 0
-        //                                                                                 ? false
-        //                                                                                 : true;
-        
         var hp_cp_email_error = email.val().length <= 0 && homePhone.val().length <= 0 && cellPhone.val().length <= 0;
 
         // if (hp_cp_email_error) {
@@ -110,7 +106,7 @@ var formHandler = (function($){
         // to put the form in a good state
         // $('#error_message').append('<h2>There was a problem with your submission. Errors have been highlighted below.</h2>');
         if (field_id.selector == '#hp_cp_email') {
-            $(field_id.selector + '_error').append('<span>One of the above fields must be filled out. </span>');
+            $(field_id.selector + '_error').append('<span>At least one point of contact is required. A home phone, cell phone, or email.</span>');
         } else {
             $(field_id.selector + '_error').append('<span>This field is required.</span>');
         }
