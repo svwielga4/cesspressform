@@ -79,9 +79,28 @@ var formHandler = (function($){
                 }
             } else if (homePhone.val().length > 0 || cellPhone.val().length > 0) {
                 // check if number is valid
+                if (homePhone.val().length > 0) {
+                    var home_phone_error = validatePhoneNum(homePhone.val())
+                                            ? true
+                                            : false;
+                }
+                
+                if (cellPhone.val().length > 1) {
+
+                }
+
             } else {
                 console.log('no contact fields were filled out');
                 return true;
+            }
+        }
+
+        var validatePhoneNum = function(phoneNum){
+            var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+            if (phoneNum.match(phoneno)) {
+                return true;
+            } else {
+                return false;
             }
         }
         
