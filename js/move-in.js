@@ -49,9 +49,42 @@ var formHandler = (function($){
                                         ? false
                                         : true;
 
+        // check if email has a value
+        // if yes, check if value is valid                               
+
         // check if at least one hp cp email has value
         // check if that one is valid
-        var hp_cp_email_error = email.val().length <= 0 && homePhone.val().length <= 0 && cellPhone.val().length <= 0;
+        // var hp_cp_email_error = function() {
+        //     if (email.val().length <= 0 && homePhone.val().length <= 0 && cellPhone.val().length <= 0) {
+        //         console.log('hp_cp_email_error is true');
+        //         return true;
+        //     } else {
+        //         return false;
+        //     }
+        // } 
+
+        // check if email has a value
+        var emailHasValue = email.val().length > 0
+                                ? true 
+                                : false; 
+        console.log('emailHasValue ' + emailHasValue);
+
+        var hp_cp_email_error = function(){
+            if (emailHasValue) {
+                // check if email is valid
+                console.log('email entered: ' + email.val());
+                if (validateEmail(email.val())) {
+                    // looks good, send it
+                    console.log('send email data');
+                }
+            } else if (homePhone.val().length > 0 || cellPhone.val().length > 0) {
+                // check if number is valid
+            } else {
+                console.log('no contact fields were filled out');
+                return true;
+            }
+        }
+        
 
         // if (hp_cp_email_error) {
         //     return {
@@ -63,11 +96,7 @@ var formHandler = (function($){
         //     };
         // }
 
-        if (email.val().length > 0) {
-            console.log(validateEmail(email.val()));
-        }
-
-        var requiredFields = [first_name_error, prospect_first_name_error, last_name_error, prospect_last_name_error, hp_cp_email_error];
+        var requiredFields = [first_name_error, prospect_first_name_error, last_name_error, prospect_last_name_error, hp_cp_email_error()];
 
         for (var i=0; i<requiredFields.length; i++) {
             if (requiredFields[i]) {
@@ -96,7 +125,7 @@ var formHandler = (function($){
 
     }
 
-    // returns true or false
+    // returns true or false ?
     var validateEmail = function (email) {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
@@ -113,7 +142,7 @@ var formHandler = (function($){
         $('#error_message').append('<h2>There was a problem with your submission. Errors have been highlighted below.</h2>');
 
         if (field_id.selector == '#hp_cp_email') {
-            $(field_id.selector + '_error').append('<span>At least one point of contact is required. A home phone, cell phone, or email.</span>');
+            $(field_id.selector + '_error').append('<span>At least one point of contact is required, please provide a home phone, cell phone, or email.</span>');
         } else {
             $(field_id.selector + '_error').append('<span>This field is required.</span>');
         }
