@@ -347,7 +347,6 @@ function add_form_scripts() {
     }
 }
 
-
 add_action( 'wp_ajax_move_in_form_submission', 'test' );
 add_action( 'wp_ajax_nopriv_move_in_form_submission', 'test' );
 function test(){
@@ -411,11 +410,11 @@ function move_in_form_submission() {
         return;
     }
 
-    // if its bad
     wp_send_json_success();
 }
 
 function check_errors( $params ){
+
 
 }
 
@@ -431,13 +430,16 @@ function check_length( $param, $max_len ) {
 }
 
 /**
- * removes all non alpha chars on certain params
+ * removes all non alpha chars
  */
 function filter_non_alpha( $param ){
     $filtered = preg_replace('/[^a-zA-Z ]+/', '', $param);
     return $filtered;
 }
 
+/**
+ * removes everything except 0-9 () - .
+ */
 function filter_phone_number( $param ){
     $filtered = preg_replace('/[^0-9\(\)\-\.]+/', '', $param);
     return $filtered;
