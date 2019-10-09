@@ -63,6 +63,10 @@ var formHandler = (function($){
         //     };
         // }
 
+        if (email.val().length > 0) {
+            console.log(validateEmail(email.val()));
+        }
+
         var requiredFields = [first_name_error, prospect_first_name_error, last_name_error, prospect_last_name_error, hp_cp_email_error];
 
         for (var i=0; i<requiredFields.length; i++) {
@@ -92,6 +96,7 @@ var formHandler = (function($){
 
     }
 
+    // returns true or false
     var validateEmail = function (email) {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
