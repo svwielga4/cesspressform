@@ -1,4 +1,6 @@
-var formHandler = (function($){
+// error representation is bad
+
+var formHandler = (function ($) {
     // references to all our inputs so we can do some validation on the front end
     var firstName = $('#first_name');
     var lastName = $('#last_name');
@@ -16,132 +18,122 @@ var formHandler = (function($){
     var prospectLastName = $('#prospect_last_name');
     var typeOfService = $('#type_of_service');
     var submitButton = $('#submit_button');
+    var topErrorMessage = $('#error_message');
+
+    var clearDisplayedErrors = function () {
+        $('#first_name_error').hide();
+        $('#prospect_first_name_error').hide();
+        $('#last_name_error').hide();
+        $('#prospect_last_name_error').hide();
+        $('#hp_cp_email_error').hide();
+    }
+
+    var hasNoValue = function (field) {
+        return field.val().length > 0
+            ? false
+            : true;
+    }
 
     /**
      * checks all the inputs to make sure they are in a good state
      * @return errors object|false
      */
-    var checkInputs = function(){
-        $('#first_name_error').empty();
-        $('#prospect_first_name_error').empty();
-        $('#last_name_error').empty();
-        $('#prospect_last_name_error').empty();
-        $('#hp_cp_email_error').empty();
-
+    var checkInputs = function () {
+        clearDisplayedErrors();
         // do some validation on the input values
         // check first name is length > 0
-        var first_name_error = firstName.val().length > 0
-                                ? false
-                                : true;
-
+        var first_name_error = hasNoValue(firstName);
         // check prospect first name
-        var prospect_first_name_error = prospectFirstName.val().length > 0
-                                        ? false
-                                        : true;
-
+        var prospect_first_name_error = hasNoValue(prospectFirstName);
         // checkl last name is length > 0
-        var last_name_error = lastName.val().length > 0
-                                ? false
-                                : true;
-
+        var last_name_error = hasNoValue(lastName);
         // check prospect last name
-        var prospect_last_name_error = prospectLastName.val().length > 0
-                                        ? false
-                                        : true;
+        var prospect_last_name_error = hasNoValue(prospectLastName);
+        var contact_fields_error = contactFieldsHaveErrors();
 
-        // check if email has a value
-        // if yes, check if value is valid                               
+        var errors = [
+            first_name_error, prospect_first_name_error,
+            last_name_error, prospect_last_name_error,
+            contact_fields_error
+        ];
 
-        // check if at least one hp cp email has value
-        // check if that one is valid
-        // var hp_cp_email_error = function() {
-        //     if (email.val().length <= 0 && homePhone.val().length <= 0 && cellPhone.val().length <= 0) {
-        //         console.log('hp_cp_email_error is true');
-        //         return true;
-        //     } else {
-        //         return false;
-        //     }
-        // } 
-
-        // check if email has a value
-        var emailHasValue = email.val().length > 0
-                                ? true 
-                                : false; 
-        console.log('emailHasValue ' + emailHasValue);
-
-        var hp_cp_email_error = function(){
-            if (emailHasValue) {
-                // check if email is valid
-                console.log('email entered: ' + email.val());
-                if (validateEmail(email.val())) {
-                    // looks good, send it
-                    console.log('send email data');
-                }
-            } else if (homePhone.val().length > 0 || cellPhone.val().length > 0) {
-                // check if number is valid
-                if (homePhone.val().length > 0) {
-                    var home_phone_error = validatePhoneNum(homePhone.val())
-                                            ? true
-                                            : false;
-                }
-                
-                if (cellPhone.val().length > 1) {
-
-                }
-
-            } else {
-                console.log('no contact fields were filled out');
-                return true;
-            }
+        if (errors.indexOf(true) === -1) {
+            return false;
         }
 
-        var validatePhoneNum = function(phoneNum){
-            var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-            if (phoneNum.match(phoneno)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        
-
-        // if (hp_cp_email_error) {
-        //     return {
-        //         first_name: first_name_error,
-        //         last_name: last_name_error,
-        //         prospect_first_name: prospect_first_name_error,
-        //         prospect_last_name: prospect_last_name_error,
-        //         hp_cp_email: hp_cp_email_error
-        //     };
-        // }
-
-        var requiredFields = [first_name_error, prospect_first_name_error, last_name_error, prospect_last_name_error, hp_cp_email_error()];
-
-        for (var i=0; i<requiredFields.length; i++) {
-            if (requiredFields[i]) {
-                switch (i) {
-                    case 0:
-                        displayErrors(firstName);
-                        break;
-                    case 1:
-                        displayErrors(prospectFirstName);
-                        break;
-                    case 2:
-                        displayErrors(lastName);
-                        break;
-                    case 3: 
-                        displayErrors(prospectLastName);
-                        break;
-                    case 4: 
-                        displayErrors(hpCpEmail);
-                        break;
-                    default:
-                        console.log('Sorry, something went wrong');
-                }
-            }
+        // object of fields with error at 0 and jQuery reference at 1
+        // errors are true
+        var requiredFieldsErrors = {
+            firstName: [first_name_error, firstName],
+            prospectFirstName: [prospect_first_name_error, prospectFirstName],
+            lastName: [last_name_error, lastName],
+            prospectLastName: [prospect_last_name_error, prospectLastName],
+            contactFields: [contact_fields_error, hpCpEmail]
         }
 
+        return requiredFieldsErrors;
+    }
 
+    var showError = function (field_id) {
+        // topErrorMessage.empty();
+        // when some data is not present
+        // give some tips to the user on what to do
+        // to put the form in a good state
+        topErrorMessage.show();
+        console.log(field_id.selector)
+        $(field_id.selector + '_error').show();
+    }
+
+    /**
+     * updates the DOM to notify a user about improper form data
+     */
+    var displayErrors = function (errors) {
+        for (field in errors) {
+            var fieldhasError = errors[field][0];
+            var element = errors[field][1];
+            if (fieldhasError) {
+                showError(element);
+            }
+        }
+    }
+
+    var contactFieldsHaveErrors = function () {
+        // check if email has value
+        var emailHasValue = hasNoValue(email);
+        // check if hp has value
+        var homePhoneHasValue = hasNoValue(homePhone);
+        // check if cp has value
+        var cellPhoneHasValue = hasNoValue(cellPhone);
+        var contacts = [emailHasValue, homePhoneHasValue, cellPhoneHasValue];
+        // if no value return novalueerror
+        if (contacts.indexOf(false) === -1) {
+            return true;
+        }
+
+        // if there is one validate the ones present
+        var isValidEmail = validateEmail(email);
+        var isValidHomePhone = validatePhoneNum(homePhone);
+        var isValidCellPhone = validatePhoneNum(cellPhone);
+        var validStuff = [isValidEmail, isValidHomePhone, isValidCellPhone];
+
+        // TODO: not acting right here
+        if (validStuff.indexOf(true) !== -1) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+
+    var validatePhoneNum = function (phoneNum) {
+        num = phoneNum.val();
+        var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        if (num.match(phoneno)) {
+            return true;
+        }
+
+        return false;
     }
 
     // returns true or false ?
@@ -150,28 +142,12 @@ var formHandler = (function($){
         return re.test(String(email).toLowerCase());
     }
 
-    /**
-     * updates the DOM to notify a user about improper form data
-     */
-    var displayErrors = function(field_id){
-        $('#error_message').empty();
-        // when some data is not present
-        // give some tips to the user on what to do
-        // to put the form in a good state
-        $('#error_message').append('<h2>There was a problem with your submission. Errors have been highlighted below.</h2>');
 
-        if (field_id.selector == '#hp_cp_email') {
-            $(field_id.selector + '_error').append('<span>At least one point of contact is required, please provide a home phone, cell phone, or email.</span>');
-        } else {
-            $(field_id.selector + '_error').append('<span>This field is required.</span>');
-        }
-        
-    }
 
     /**
      * Grabs all the form values and extra data needed for form submission
      */
-    var packageData = function(){
+    var packageData = function () {
         return {
             action: 'move_in_form_submission',
             nonce: FROM_WP.nonce,
@@ -192,23 +168,23 @@ var formHandler = (function($){
         };
     }
 
-    var submitForm = function(data){
+    var submitForm = function (data) {
         // if button isnt disabled
         // submit the information to OUR server
         $.ajax({
             method: "POST",
             url: FROM_WP.ajax_url, //localize the ajax url from wp
             data: data, // package all the data up first
-            success: function(res){
+            success: function (res) {
                 // some success actions
-                if(!res.success){
+                if (!res.success) {
                     console.log('something bad happened');
                     return;
                 }
                 // display success message
                 console.log('you made it');
             },
-            error: function(){
+            error: function () {
                 // some error actions
                 console.log('bad')
 
@@ -216,23 +192,23 @@ var formHandler = (function($){
         });
     }
 
-    var handleSubmit = function(){
+    var handleSubmit = function () {
         // check for violations
-        var hasErrors = checkInputs();
+        var errors = checkInputs();
         // if some violations display Errors
-        console.log(hasErrors);
-        // if (hasErrors) {
-        //     // early return because there are errors
-        //     displayErrors();
-        //     return;
-        // }
+        console.log(errors);
+        if (errors) {
+            // early return because there are errors
+            displayErrors(errors);
+            return;
+        }
 
         // if everything is good, pack up the data and submit
         var data = packageData();
         submitForm(data);
     }
 
-    var init = function(){
+    var init = function () {
         submitButton.click(handleSubmit)
     }
 

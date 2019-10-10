@@ -13,16 +13,22 @@ get_header();
 </style>
 
 <h1>Lead Information</h1>
-<div class="error" id="error_message"></div>
+<div class="error" id="error_message" style="display:none">
+    <h2>There was a problem with your submission. Errors have been highlighted below.</h2>
+</div>
 
 <label for="first_name">*First Name: </label>
 <input type="text" id="first_name" maxlength="50">
-<span class="error" id="first_name_error"></span>
+<span class="error" id="first_name_error" style="display:none">
+    <span>This field is required.</span>
+</span>
 <br/>
 
 <label for="last_name">*Last Name: </label>
 <input type="text" id="last_name" maxlength="50">
-<span class="error" id="last_name_error"></span>
+<span class="error" id="last_name_error" style="display:none">
+    <span>This field is required.</span>
+</span>
 <br/>
 
 <h2>You must fill in at least one: Home Phone, Cell Phone or Email</h2>
@@ -39,7 +45,9 @@ get_header();
 <input type="text" id="email" maxlength="100">
 <br/>
 <div id="hp_cp_email"></div>
-<span class="error" id="hp_cp_email_error"></span>
+<span class="error" id="hp_cp_email_error" style="display:none">
+    <span>At least one point of contact is required, please provide a home phone, cell phone, or email.</span>
+</span>
 
 <h2>Mailing Address</h2>
 
@@ -69,12 +77,16 @@ get_header();
 
 <label for="prospect_first_name">*Prospect First Name: </label>
 <input type="text" id="prospect_first_name" maxlength="50">
-<span class="error" id="prospect_first_name_error"></span>
+<span class="error" id="prospect_first_name_error" style="display:none">
+    <span>This field is required.</span>
+</span>
 <br/>
 
 <label for="prospect_last_name">*Prospect Last Name: </label>
 <input type="text" id="prospect_last_name" maxlength="50">
-<span class="error" id="prospect_last_name_error"></span>
+<span class="error" id="prospect_last_name_error" style="display:none">
+    <span>This field is required.</span>
+</span>
 <br/>
 
 <label for="typeofservice">Type of Service: </label>

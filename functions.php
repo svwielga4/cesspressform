@@ -352,12 +352,9 @@ add_action( 'wp_ajax_move_in_form_submission', 'move_in_form_submission' );
 add_action( 'wp_ajax_nopriv_move_in_form_submission', 'move_in_form_submission' );
 function move_in_form_submission() {
     // we check to make sure the nonce is valid
-    error_log( 'made it back to wp' );
     check_ajax_referer( 'move-n', 'nonce' );
 
     error_log( print_r( $_POST, true ) );
-
-
     // do some validation on the back end
 
 
