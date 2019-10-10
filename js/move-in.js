@@ -34,6 +34,12 @@ var formHandler = (function ($) {
         $('input').val('');
     }
 
+    var clearMessages = function () {
+        $('#api_error_message').empty();
+        $('#success_message').hide();
+        $('#error_message').hide();
+    }
+
     var hasNoValue = function (field) {
         return field.val().length > 0
             ? false
@@ -185,6 +191,7 @@ var formHandler = (function ($) {
                 if (!res.success) {
                     //var stringApiErrorMessage = apiErrorMessage.text(res.data.toString().replace(/"/g, ""));
                     if (res.data.toString().indexOf("Duplicate") == 1) {
+                        $('#error_message').show();
                         return apiErrorMessage.text("Sorry, this prospect already in the system. If this is a mistake, please call for further assistance.");
                     }
                     
@@ -204,8 +211,7 @@ var formHandler = (function ($) {
     }
 
     var handleSubmit = function () {
-        $('#api_error_message').empty();
-        $('#success_message').hide();
+        clearMessages();
         // check for violations
         var errors = checkInputs();
         // if some violations display Errors
