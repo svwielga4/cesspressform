@@ -347,9 +347,13 @@ function add_form_scripts() {
     }
 }
 
-
-add_action( 'wp_ajax_move_in_form_submission', 'move_in_form_submission' );
-add_action( 'wp_ajax_nopriv_move_in_form_submission', 'move_in_form_submission' );
+add_action( 'wp_ajax_move_in_form_submission', 'test' );
+add_action( 'wp_ajax_nopriv_move_in_form_submission', 'test' );
+function test(){
+    error_log(
+        filter_phone_number('(234)abv-234sdfa 234sd#$@a2342sdf')
+    );
+}
 function move_in_form_submission() {
     // we check to make sure the nonce is valid
     check_ajax_referer( 'move-n', 'nonce' );
@@ -361,25 +365,26 @@ function move_in_form_submission() {
     // send request off to the 3rd party service
     $url = 'https://cptest.move-n.com/api/Lead/LeadInfo';
     $body = [
-            'sender_id' => '849b2101c11b171ca1cb65b27d1119127ee38f2c',
-            'parent_id' => '224' ,
-            'first_name' => sanitize_text_field( $_POST['firstName'] ),
-            'last_name' => sanitize_text_field( $_POST['lastName'] ),
-            'prospect_first_name' => sanitize_text_field( $_POST['prospectFirstName'] ),
-            'prospect_last_name' => sanitize_text_field( $_POST['prospectLastName'] ),
-            'home_phone' => sanitize_text_field( $_POST['homePhone'] ),
-            'cell_phone' => sanitize_text_field( $_POST['cellPhone'] ),
-            'email' => sanitize_text_field( $_POST['email'] ),
-            'notes' => sanitize_text_field( $_POST['notes'] ),
-            'source_code' => '1',
-            'property_id' => '483',
-            'address1' => sanitize_text_field( $_POST['address1'] ),
-            'address2' => sanitize_text_field( $_POST['address2'] ),
-            'city' => sanitize_text_field( $_POST['city'] ),
-            'state' => sanitize_text_field( $_POST['state'] ),
-            'zip' => sanitize_text_field( $_POST['zip'] ),
-            'TypeOfService' => sanitize_text_field( $_POST['typeOfService'] ),
-        ];
+        'sender_id' => '849b2101c11b171ca1cb65b27d1119127ee38f2c',
+        'parent_id' => '224' ,
+        'first_name' => filter_non_alpha( sanitize_text_field( $_POST['firstName'] ) ),
+        'last_name' => filter_non_alpha( sanitize_text_field( $_POST['lastName'] ) ),
+        'prospect_first_name' => filter_non_alpha( sanitize_text_field( $_POST['prospectFirstName'] ) ),
+        'prospect_last_name' => filter_non_alpha( sanitize_text_field( $_POST['prospectLastName'] ) ),
+        'home_phone' => filter_phone_number( sanitize_text_field( $_POST['homePhone'] ) ),
+        'cell_phone' => filter_phone_number( sanitize_text_field( $_POST['cellPhone'] ) ),
+        'email' => sanitize_text_field( $_POST['email'] ),
+        'notes' => sanitize_text_field( $_POST['notes'] ),
+        'source_code' => '1',
+        'property_id' => '483',
+        'address1' => sanitize_text_field( $_POST['address1'] ),
+        'address2' => sanitize_text_field( $_POST['address2'] ),
+        'city' => sanitize_text_field( $_POST['city'] ),
+        'state' => sanitize_text_field( $_POST['state'] ),
+        'zip' => sanitize_text_field( $_POST['zip'] ),
+        'TypeOfService' => sanitize_text_field( $_POST['typeOfService'] ),
+    ];
+
 
     $args = [
         'method' => 'POST',
@@ -395,12 +400,38 @@ function move_in_form_submission() {
     $response = wp_remote_post( $url, $args );
 
     error_log( print_r( $response, true ) );
-    if ( wp_remote_retrieve_response_code($response) !== 200 ){
+    if ( wp_remote_retrieve_response_code( $response ) !== 200 ) {
         // calling send_json_error or success has a die() in it
         wp_send_json_error();
         return;
     }
 
-    // if its bad
     wp_send_json_success();
+}
+
+// /**
+//  * checks if params are between 0 and a max length
+//  */
+// function check_length( $param, $max_len ) {
+//     $len = strlen( $param );
+//     if ( $len > 0 && $len < $max_len ) {
+//         return true;
+//     }
+//     return false;
+// }
+
+/**
+ * removes all non alpha chars
+ */
+function filter_non_alpha( $param ){
+    $filtered = preg_replace('/[^a-zA-Z ]+/', '', $param);
+    return $filtered;
+}
+
+/**
+ * removes everything except 0-9 () - .
+ */
+function filter_phone_number( $param ){
+    $filtered = preg_replace('/[^0-9]+/', '', $param);
+    return $filtered;
 }
