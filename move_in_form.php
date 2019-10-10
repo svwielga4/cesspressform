@@ -7,8 +7,11 @@
 get_header();
 ?>
 <style>
-.error {
+.error, #api_error_message {
     color: red;
+}
+#success_message {
+    color: green;
 }
 </style>
 
@@ -98,8 +101,10 @@ get_header();
     <option value="Long-term skilled nursing care/healthcare center">Long-term skilled nursing care/healthcare center</option>
 </select>
 <br/>
-<button id="submit_button">Submit</button>
 <div id="api_error_message"></div>
+<div id="success_message" style="display:none">Thank you!</div>
+<button id="submit_button">Submit</button>
+
 
 
 <?php

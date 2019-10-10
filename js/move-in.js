@@ -20,6 +20,7 @@ var formHandler = (function ($) {
     var submitButton = $('#submit_button');
     var topErrorMessage = $('#error_message');
     var apiErrorMessage = $('#api_error_message');
+    var successMessage = $('#success_message');
 
     var clearDisplayedErrors = function () {
         $('#first_name_error').hide();
@@ -27,6 +28,10 @@ var formHandler = (function ($) {
         $('#last_name_error').hide();
         $('#prospect_last_name_error').hide();
         $('#hp_cp_email_error').hide();
+    }
+
+    var clearInputs = function () {
+        $('input').val('');
     }
 
     var hasNoValue = function (field) {
@@ -57,7 +62,7 @@ var formHandler = (function ($) {
             last_name_error, prospect_last_name_error,
             contact_fields_error
         ];
-
+        
         if (errors.indexOf(true) === -1) {
             return false;
         }
@@ -81,7 +86,7 @@ var formHandler = (function ($) {
         // give some tips to the user on what to do
         // to put the form in a good state
         topErrorMessage.show();
-        console.log(field_id.selector)
+        console.log("FIELD ID SELECTOR: " + field_id.selector)
         $(field_id.selector + '_error').show();
     }
 
@@ -100,12 +105,14 @@ var formHandler = (function ($) {
 
     var contactFieldsHaveErrors = function () {
         // check if email has value
-        var emailHasValue = hasNoValue(email);
+        var emptyEmail = hasNoValue(email);
         // check if hp has value
-        var homePhoneHasValue = hasNoValue(homePhone);
+        var emptyHomePhone = hasNoValue(homePhone);
         // check if cp has value
-        var cellPhoneHasValue = hasNoValue(cellPhone);
-        var contacts = [emailHasValue, homePhoneHasValue, cellPhoneHasValue];
+        var emptyCellPhone = hasNoValue(cellPhone);
+        // 
+        var contacts = [emptyEmail, emptyHomePhone, emptyCellPhone];
+
         // if no value return novalueerror
         if (contacts.indexOf(false) === -1) {
             return true;
@@ -119,7 +126,7 @@ var formHandler = (function ($) {
 
         // TODO: not acting right here
         if (validStuff.indexOf(true) !== -1) {
-            return true;
+            return false;
         }
 
         return false;
@@ -176,9 +183,16 @@ var formHandler = (function ($) {
             success: function (res) {
                 // some success actions
                 if (!res.success) {
-                    apiErrorMessage.text(res.data)
-                    return;
+                    //var stringApiErrorMessage = apiErrorMessage.text(res.data.toString().replace(/"/g, ""));
+                    if (res.data.toString().indexOf("Duplicate") == 1) {
+                        return apiErrorMessage.text("Sorry, this prospect already in the system. If this is a mistake, please call for further assistance.");
+                    }
+                    
+                    return apiErrorMessage.text(res.data.toString().replace(/"/g, ""));
                 }
+                clearInputs();
+                // display a success message
+                successMessage.show();
                 console.log('you made it');
             },
             error: function () {
@@ -190,10 +204,12 @@ var formHandler = (function ($) {
     }
 
     var handleSubmit = function () {
+        $('#api_error_message').empty();
+        $('#success_message').hide();
         // check for violations
         var errors = checkInputs();
         // if some violations display Errors
-        console.log(errors);
+        console.log("ERRORS: " + errors);
         if (errors) {
             // early return because there are errors
             displayErrors(errors);
