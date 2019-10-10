@@ -388,7 +388,6 @@ function move_in_form_submission() {
         'TypeOfService' => sanitize_text_field( $_POST['typeOfService'] ),
     ];
 
-    $errors = check_errors( $body );
 
     $args = [
         'method' => 'POST',
@@ -413,21 +412,16 @@ function move_in_form_submission() {
     wp_send_json_success();
 }
 
-function check_errors( $params ){
-
-
-}
-
-/**
- * checks if params are between 0 and a max length
- */
-function check_length( $param, $max_len ) {
-    $len = strlen( $param );
-    if ( $len > 0 && $len < $max_len ) {
-        return true;
-    }
-    return false;
-}
+// /**
+//  * checks if params are between 0 and a max length
+//  */
+// function check_length( $param, $max_len ) {
+//     $len = strlen( $param );
+//     if ( $len > 0 && $len < $max_len ) {
+//         return true;
+//     }
+//     return false;
+// }
 
 /**
  * removes all non alpha chars
