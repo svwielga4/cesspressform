@@ -441,6 +441,6 @@ function filter_non_alpha( $param ){
  * removes everything except 0-9 () - .
  */
 function filter_phone_number( $param ){
-    $filtered = preg_replace('/[^0-9\(\)\-\.]+/', '', $param);
+    $filtered = preg_replace('/[^0-9]+/', '', $param);
     return $filtered;
 }
