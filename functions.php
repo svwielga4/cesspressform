@@ -347,13 +347,9 @@ function add_form_scripts() {
     }
 }
 
-add_action( 'wp_ajax_move_in_form_submission', 'test' );
-add_action( 'wp_ajax_nopriv_move_in_form_submission', 'test' );
-function test(){
-    error_log(
-        filter_phone_number('(234)abv-234sdfa 234sd#$@a2342sdf')
-    );
-}
+add_action( 'wp_ajax_move_in_form_submission', 'move_in_form_submission' );
+add_action( 'wp_ajax_nopriv_move_in_form_submission', 'move_in_form_submission' );
+
 function move_in_form_submission() {
     // we check to make sure the nonce is valid
     check_ajax_referer( 'move-n', 'nonce' );
@@ -402,7 +398,7 @@ function move_in_form_submission() {
     error_log( print_r( $response, true ) );
     if ( wp_remote_retrieve_response_code( $response ) !== 200 ) {
         // calling send_json_error or success has a die() in it
-        wp_send_json_error();
+        wp_send_json_error( wp_remote_retrieve_body( $response ) );
         return;
     }
 
@@ -423,15 +419,15 @@ function move_in_form_submission() {
 /**
  * removes all non alpha chars
  */
-function filter_non_alpha( $param ){
-    $filtered = preg_replace('/[^a-zA-Z ]+/', '', $param);
+function filter_non_alpha( $param ) {
+    $filtered = preg_replace( '/[^a-zA-Z ]+/', '', $param );
     return $filtered;
 }
 
 /**
  * removes everything except 0-9 () - .
  */
-function filter_phone_number( $param ){
-    $filtered = preg_replace('/[^0-9]+/', '', $param);
+function filter_phone_number( $param ) {
+    $filtered = preg_replace( '/[^0-9]+/', '', $param );
     return $filtered;
 }

@@ -99,6 +99,7 @@ get_header();
 </select>
 <br/>
 <button id="submit_button">Submit</button>
+<div id="api_error_message"></div>
 
 
 <?php

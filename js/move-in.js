@@ -19,6 +19,7 @@ var formHandler = (function ($) {
     var typeOfService = $('#type_of_service');
     var submitButton = $('#submit_button');
     var topErrorMessage = $('#error_message');
+    var apiErrorMessage = $('#api_error_message');
 
     var clearDisplayedErrors = function () {
         $('#first_name_error').hide();
@@ -122,7 +123,6 @@ var formHandler = (function ($) {
         }
 
         return false;
-
     }
 
 
@@ -141,8 +141,6 @@ var formHandler = (function ($) {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
-
-
 
     /**
      * Grabs all the form values and extra data needed for form submission
@@ -178,14 +176,13 @@ var formHandler = (function ($) {
             success: function (res) {
                 // some success actions
                 if (!res.success) {
-                    console.log('something bad happened');
+                    apiErrorMessage.text(res.data)
                     return;
                 }
-                // display success message
                 console.log('you made it');
             },
             error: function () {
-                // some error actions
+                // display some error to the user
                 console.log('bad')
 
             }
