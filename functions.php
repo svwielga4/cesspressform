@@ -378,7 +378,8 @@ function move_in_form_submission() {
         'city' => sanitize_text_field( $_POST['city'] ),
         'state' => sanitize_text_field( $_POST['state'] ),
         'zip' => sanitize_text_field( $_POST['zip'] ),
-        'TypeOfService' => sanitize_text_field( $_POST['typeOfService'] ),
+        'TypeOfService' => 'Independent',
+        //'TypeOfService' => sanitize_text_field( $_POST['typeOfService'] ),
     ];
 
 

@@ -16,7 +16,10 @@ var formHandler = (function ($) {
     var note = $('#note');
     var prospectFirstName = $('#prospect_first_name');
     var prospectLastName = $('#prospect_last_name');
-    var typeOfService = $('#type_of_service');
+    var prospectAge = $('#prospect_age');
+    var prospectAnnualIncome = $('#prospect_annual_income');
+    var prospectIntHob = $('#prospect_int_hob');
+    //var typeOfService = $('#type_of_service');
     var submitButton = $('#submit_button');
     var topErrorMessage = $('#error_message');
     var apiErrorMessage = $('#api_error_message');
@@ -87,12 +90,10 @@ var formHandler = (function ($) {
     }
 
     var showError = function (field_id) {
-        // topErrorMessage.empty();
         // when some data is not present
         // give some tips to the user on what to do
         // to put the form in a good state
         topErrorMessage.show();
-        console.log("FIELD ID SELECTOR: " + field_id.selector)
         $(field_id.selector + '_error').show();
     }
 
@@ -172,10 +173,16 @@ var formHandler = (function ($) {
             city: city.val(),
             state: state.val(),
             zip: zip.val(),
-            note: note.val(),
+            note: note.val() 
+                + " PROSPECT ANNUAL INCOME: "
+                + prospectAnnualIncome.val()
+                + " PROSPECT AGE: " 
+                + prospectAge.val() 
+                + " PROSPECT INTERESTS/HOBBIES: " 
+                + prospectIntHob.val(),
             prospectFirstName: prospectFirstName.val(),
             prospectLastName: prospectLastName.val(),
-            typeOfService: typeOfService.val(),
+            typeOfService: 'Independent',
         };
     }
 
@@ -192,19 +199,20 @@ var formHandler = (function ($) {
                     //var stringApiErrorMessage = apiErrorMessage.text(res.data.toString().replace(/"/g, ""));
                     if (res.data.toString().indexOf("Duplicate") == 1) {
                         $('#error_message').show();
-                        return apiErrorMessage.text("Sorry, this prospect already in the system. If this is a mistake, please call for further assistance.");
+                        return apiErrorMessage.text("Sorry, this prospect is already in the system. If this is a mistake, please call for further assistance.");
                     }
                     
                     return apiErrorMessage.text(res.data.toString().replace(/"/g, ""));
                 }
                 clearInputs();
+                $('#form').empty();
                 // display a success message
                 successMessage.show();
-                console.log('you made it');
+                console.log('Lead Loaded Successfully');
             },
             error: function () {
                 // display some error to the user
-                console.log('bad')
+                console.log('Something went wrong')
 
             }
         });
@@ -215,7 +223,6 @@ var formHandler = (function ($) {
         // check for violations
         var errors = checkInputs();
         // if some violations display Errors
-        console.log("ERRORS: " + errors);
         if (errors) {
             // early return because there are errors
             displayErrors(errors);
