@@ -344,6 +344,8 @@ function add_form_scripts() {
                 'nonce' => wp_create_nonce( 'move-n' ),
             ]
         );
+
+        add_option('source_code', '8888', '', 'yes' );
     }
 }
 
@@ -351,6 +353,10 @@ add_action( 'wp_ajax_move_in_form_submission', 'move_in_form_submission' );
 add_action( 'wp_ajax_nopriv_move_in_form_submission', 'move_in_form_submission' );
 
 function move_in_form_submission() {
+    $sourceCodeNum = get_option('source_code');
+    $sourceCodeNum++;
+    update_option('source_code', $sourceCodeNum, 'yes');
+    
     // we check to make sure the nonce is valid
     check_ajax_referer( 'move-n', 'nonce' );
 
@@ -370,16 +376,18 @@ function move_in_form_submission() {
         'home_phone' => filter_phone_number( sanitize_text_field( $_POST['homePhone'] ) ),
         'cell_phone' => filter_phone_number( sanitize_text_field( $_POST['cellPhone'] ) ),
         'email' => sanitize_text_field( $_POST['email'] ),
-        'notes' => sanitize_text_field( $_POST['notes'] ),
-        'source_code' => '1',
-        'property_id' => '483',
+        'notes' => sanitize_textarea_field( $_POST['notes'] ),
+        // source code needs to be defined or else submission will not work
+        'source_code' => $sourceCodeNum,
+        // property id specifies which market rate site. 479 is Pioneer House
+        'property_id' => '479',
         'address1' => sanitize_text_field( $_POST['address1'] ),
         'address2' => sanitize_text_field( $_POST['address2'] ),
         'city' => sanitize_text_field( $_POST['city'] ),
         'state' => sanitize_text_field( $_POST['state'] ),
         'zip' => sanitize_text_field( $_POST['zip'] ),
         'TypeOfService' => 'Independent',
-        //'TypeOfService' => sanitize_text_field( $_POST['typeOfService'] ),
+        // 'TypeOfService' => sanitize_text_field( $_POST['typeOfService'] ),
     ];
 
 

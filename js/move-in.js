@@ -13,7 +13,7 @@ var formHandler = (function ($) {
     var city = $('#city');
     var zip = $('#zip');
     var hpCpEmail = $('#hp_cp_email');
-    var note = $('#note');
+    var notes = $('#notes');
     var prospectFirstName = $('#prospect_first_name');
     var prospectLastName = $('#prospect_last_name');
     var prospectAge = $('#prospect_age');
@@ -173,13 +173,13 @@ var formHandler = (function ($) {
             city: city.val(),
             state: state.val(),
             zip: zip.val(),
-            note: note.val() 
-                + " PROSPECT ANNUAL INCOME: "
-                + prospectAnnualIncome.val()
-                + " PROSPECT AGE: " 
-                + prospectAge.val() 
-                + " PROSPECT INTERESTS/HOBBIES: " 
-                + prospectIntHob.val(),
+            notes: notes.val(),
+                // + " PROSPECT ANNUAL INCOME: "
+                // + prospectAnnualIncome.val()
+                // + " PROSPECT AGE: " 
+                // + prospectAge.val() 
+                // + " PROSPECT INTERESTS/HOBBIES: " 
+                // + prospectIntHob.val(),
             prospectFirstName: prospectFirstName.val(),
             prospectLastName: prospectLastName.val(),
             typeOfService: 'Independent',

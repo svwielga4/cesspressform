@@ -13,7 +13,7 @@ get_header();
 #success_message {
     color: green;
 }
-#note {
+#notes {
     margin: 0px;
     width: 700px;
     height: 150px;
@@ -108,8 +108,8 @@ get_header();
     <input type="text" id="zip" size="10" maxlength="10">
     <br/>
 
-    <label for="note"><h2>Where did you hear about our Community?</h2></label><br>
-    <textarea id="note" cols="30" rows="10" maxlength="3000"></textarea>
+    <label for="notes"><h2>Where did you hear about our Community?</h2></label><br>
+    <textarea id="notes" cols="30" rows="10" maxlength="3000"></textarea>
     <br/>
 
     <label for="prospect_int_hob"><h2>Prospect interests and hobbies?</h2></label><br>
